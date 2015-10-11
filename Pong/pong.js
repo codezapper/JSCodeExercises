@@ -85,6 +85,8 @@ function Ball(radius, initialX, initialY, initialDx, initialDy) {
 	component.y = initialY;
 	component.dx = initialDx;
 	component.dy = initialDy;
+	component.currentSpeed = 1;
+	component.maxSpeed = 10;
 
 	component.draw = function() {
 		mainContext.beginPath();
@@ -99,6 +101,17 @@ function Ball(radius, initialX, initialY, initialDx, initialDy) {
 	component.respawn = function() {
 		component.x = SCREEN_WIDTH/2;
 		component.y = SCREEN_HEIGHT/2;
+		component.dx = (component.dx > 0) ? -2 : 2;
+		component.dy = (component.dy > 0) ? -2 : 2;
+		component.currentSpeed = 1;
+	}
+
+	component.bounceFaster = function() {
+		if (component.currentSpeed < component.maxSpeed) {
+			component.dx = (1.1 * component.dx)
+			component.dy = (1.1 * component.dy)
+			component.currentSpeed++;
+		}
 		component.dx = -component.dx;
 	}
 
@@ -117,7 +130,7 @@ function Ball(radius, initialX, initialY, initialDx, initialDy) {
 
 		if (component.x >= (players[1].paddle.x - component.radius)) {
 			if ((component.y >= players[1].paddle.y) && (component.y <= (players[1].paddle.y+players[1].paddle.height))) {
-				component.dx = -component.dx;
+				component.bounceFaster();
 			} else {
 				players[0].score.increase();
 				component.respawn();
@@ -126,7 +139,7 @@ function Ball(radius, initialX, initialY, initialDx, initialDy) {
 
 		if (component.x <= (players[0].paddle.x + component.radius + players[0].paddle.width)) {
 			if ((component.y >= players[0].paddle.y) && (component.y <= (players[0].paddle.y+players[0].paddle.height))) {
-				component.dx = -component.dx;
+				component.bounceFaster();
 			} else {
 				players[1].score.increase();
 				component.respawn();
