@@ -1,5 +1,6 @@
 var mainCanvas = document.getElementById("gameCanvas");
 var mainContext = mainCanvas.getContext("2d");
+var gameIsRunning = true;
 
 var SCREEN_WIDTH = 800;
 var SCREEN_HEIGHT = 480;
@@ -172,11 +173,11 @@ function Paddle(width, height, initialX, initialY, initialDx, initialDy) {
 	}
 
 	component.moveUp = function() {
-			component.dy = -5;
+			component.dy = -PADDLE_Y_SPEED;
 	}
 
 	component.moveDown = function() {
-			component.dy = 5;
+			component.dy = PADDLE_Y_SPEED;
 	}
 
 	component.stopMoving = function() {
@@ -219,15 +220,20 @@ function clearScreen() {
 	mainContext.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
+function pauseOrResumeGame() {
+	gameIsRunning = !gameIsRunning;
+}
+
 function drawAll() {
-	mainContext.imageSmoothingEnabled = true;
-	gameObjects.forEach(function(gameObject, index) {
-		gameObject.update();
-	});
-	clearScreen();
-	gameObjects.forEach(function(gameObject, index) {
-		gameObject.draw();
-	});
+	if (gameIsRunning) {
+		gameObjects.forEach(function(gameObject, index) {
+			gameObject.update();
+		});
+		clearScreen();
+		gameObjects.forEach(function(gameObject, index) {
+			gameObject.draw();
+		});
+	}
 	requestAnimationFrame(drawAll);
 }
 
@@ -237,7 +243,7 @@ var players = [new Player(PADDLE_X_SIZE, PADDLE_Y_SIZE, X_MARGIN, (SCREEN_HEIGHT
 							 new Player(PADDLE_X_SIZE, PADDLE_Y_SIZE, SCREEN_WIDTH - X_MARGIN - PADDLE_X_SIZE, (SCREEN_HEIGHT/2)-(PADDLE_Y_SIZE/2), 700, 50 )]
 var gameObjects = [new Field(), ball, players[0].paddle, players[1].paddle, players[0].score, players[1].score];
 
-var keyDownMapping = { 87: players[0].paddle.moveUp, 83: players[0].paddle.moveDown, 38: players[1].paddle.moveUp, 40: players[1].paddle.moveDown};
+var keyDownMapping = { 80: pauseOrResumeGame, 87: players[0].paddle.moveUp, 83: players[0].paddle.moveDown, 38: players[1].paddle.moveUp, 40: players[1].paddle.moveDown};
 var keyUpMapping = { 87: players[0].paddle.stopMoving, 83: players[0].paddle.stopMoving, 38: players[1].paddle.stopMoving, 40: players[1].paddle.stopMoving};
 
 document.addEventListener("keydown", keyDownHandler, false);
