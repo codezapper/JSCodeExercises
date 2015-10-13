@@ -228,6 +228,7 @@ function drawAll() {
 	gameObjects.forEach(function(gameObject, index) {
 		gameObject.draw();
 	});
+	requestAnimationFrame(drawAll);
 }
 
 var ball = new Ball(10, 400, 240, 2, 2);
@@ -242,4 +243,5 @@ var keyUpMapping = { 87: players[0].paddle.stopMoving, 83: players[0].paddle.sto
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
-setInterval(drawAll, 10);
+var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+requestAnimationFrame(drawAll);
