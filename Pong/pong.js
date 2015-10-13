@@ -1,6 +1,7 @@
 var mainCanvas = document.getElementById("gameCanvas");
 var mainContext = mainCanvas.getContext("2d");
 var gameIsRunning = true;
+var animationId;
 
 var SCREEN_WIDTH = 800;
 var SCREEN_HEIGHT = 480;
@@ -221,20 +222,23 @@ function clearScreen() {
 }
 
 function pauseOrResumeGame() {
+	if (gameIsRunning) {
+		cancelAnimationFrame(animationId);
+	} else {
+		animationId = requestAnimationFrame(drawAll);
+	}
 	gameIsRunning = !gameIsRunning;
 }
 
 function drawAll() {
-	if (gameIsRunning) {
-		gameObjects.forEach(function(gameObject, index) {
-			gameObject.update();
-		});
-		clearScreen();
-		gameObjects.forEach(function(gameObject, index) {
-			gameObject.draw();
-		});
-	}
-	requestAnimationFrame(drawAll);
+	gameObjects.forEach(function(gameObject, index) {
+		gameObject.update();
+	});
+	clearScreen();
+	gameObjects.forEach(function(gameObject, index) {
+		gameObject.draw();
+	});
+	animationId = requestAnimationFrame(drawAll);
 }
 
 var ball = new Ball(10, 400, 240, 2, 2);
@@ -249,5 +253,6 @@ var keyUpMapping = { 87: players[0].paddle.stopMoving, 83: players[0].paddle.sto
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
+var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame || window.msCancelAnimationFrame;
 var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-requestAnimationFrame(drawAll);
+animationId = requestAnimationFrame(drawAll);
