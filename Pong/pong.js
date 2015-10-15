@@ -36,8 +36,8 @@ function Score(value, initialX, initialY, initialDx, initialDy) {
 	component.draw = function() {
 		mainContext.font="50px Courier Black";
 		mainContext.lineWidth="1";
-		mainContext.strokeStyle="Black";
-		mainContext.fillStyle="Black";
+		mainContext.strokeStyle="#FFFFFF";
+		mainContext.fillStyle="#FFFFFF";
 		mainContext.fillText(component.value.toString(), component.x, component.y);
 	}
 
@@ -54,19 +54,19 @@ function Field() {
 	component.draw = function () {
 		mainContext.beginPath();
 		mainContext.rect(0,0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		mainContext.fillStyle = "#CCCCFF";
+		mainContext.fillStyle = "#8599d5";
 		mainContext.strokeStyle = "#000000";
 		mainContext.fill();
 		mainContext.stroke();
 		mainContext.closePath();
 		mainContext.beginPath();
-		mainContext.strokeStyle = "#AA8800";
+		mainContext.strokeStyle = "#FFFFFF";
 		mainContext.moveTo(0, 60);
 		mainContext.lineTo(SCREEN_WIDTH, 60);
 		mainContext.stroke();
 		mainContext.closePath();
 		mainContext.beginPath();
-		mainContext.strokeStyle = "#000000";
+		mainContext.strokeStyle = "#FFFFFF";
 		mainContext.moveTo(SCREEN_WIDTH/2, 0);
 		mainContext.lineTo(SCREEN_WIDTH/2, SCREEN_HEIGHT);
 		mainContext.stroke();
@@ -83,6 +83,8 @@ function Field() {
 function Ball(radius, initialX, initialY, initialDx, initialDy) {
 	var component = this;
 	component.radius = radius;
+	component.initialX = initialX;
+	component.initialY = initialY;
 	component.x = initialX;
 	component.y = initialY;
 	component.dx = initialDx;
@@ -92,7 +94,8 @@ function Ball(radius, initialX, initialY, initialDx, initialDy) {
 
 	component.draw = function() {
 		mainContext.beginPath();
-	  mainContext.fillStyle = "#FF0000";
+	  // mainContext.fillStyle = "#8599d5";
+	  mainContext.fillStyle = "#FFFFFF";
 		mainContext.arc(component.x, component.y, component.radius, 0, Math.PI*2);
 		mainContext.strokeStyle="#000000";
 	  mainContext.fill();
@@ -101,8 +104,8 @@ function Ball(radius, initialX, initialY, initialDx, initialDy) {
 	}
 
 	component.respawn = function() {
-		component.x = SCREEN_WIDTH/2;
-		component.y = SCREEN_HEIGHT/2;
+		component.x = component.initialX
+		component.y = component.initialY
 		component.dx = (component.dx > 0) ? -2 : 2;
 		component.dy = (component.dy > 0) ? -2 : 2;
 		component.currentSpeed = 1;
@@ -166,7 +169,8 @@ function Paddle(width, height, initialX, initialY, initialDx, initialDy) {
 	component.draw = function() {
 		mainContext.beginPath();
 		mainContext.rect(component.x, component.y, component.width, component.height);
-		mainContext.fillStyle = "#00AA22";
+		// mainContext.fillStyle = "#8599d5";
+		mainContext.fillStyle = "#FFFFFF";
 		mainContext.strokeStyle="#000000";
 		mainContext.fill();
 		mainContext.stroke();
@@ -241,7 +245,7 @@ function drawAll() {
 	animationId = requestAnimationFrame(drawAll);
 }
 
-var ball = new Ball(10, 400, 240, 2, 2);
+var ball = new Ball(10, 398, 260, 2, 2);
 
 var players = [new Player(PADDLE_X_SIZE, PADDLE_Y_SIZE, X_MARGIN, (SCREEN_HEIGHT/2)-(PADDLE_Y_SIZE/2), 80, 50 ),
 							 new Player(PADDLE_X_SIZE, PADDLE_Y_SIZE, SCREEN_WIDTH - X_MARGIN - PADDLE_X_SIZE, (SCREEN_HEIGHT/2)-(PADDLE_Y_SIZE/2), 700, 50 )]
