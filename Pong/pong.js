@@ -13,45 +13,45 @@ var PADDLE_Y_SIZE = 60;
 var PADDLE_Y_SPEED = 5;
 
 function Score(value, initialX, initialY, initialDx, initialDy) {
-	var component = this;
-	component.value = value;
-	component.x = initialX;
-	component.y = initialY;
-	component.dx = initialDx;
-	component.dy = initialDy;
+	var thisScore = this;
+	thisScore.value = value;
+	thisScore.x = initialX;
+	thisScore.y = initialY;
+	thisScore.dx = initialDx;
+	thisScore.dy = initialDy;
 
-	component.increase = function() {
-		component.value++;
+	thisScore.increase = function() {
+		thisScore.value++;
 	}
 
-	component.decrease = function() {
-		component.value++;
+	thisScore.decrease = function() {
+		thisScore.value++;
 	}
 
-	component.update = function() {
-		component.x += component.dx;
-		component.y += component.dy;
+	thisScore.update = function() {
+		thisScore.x += thisScore.dx;
+		thisScore.y += thisScore.dy;
 	}
 
-	component.draw = function() {
+	thisScore.draw = function() {
 		mainContext.font="50px Courier Black";
 		mainContext.lineWidth="1";
 		mainContext.strokeStyle="#FFFFFF";
 		mainContext.fillStyle="#FFFFFF";
-		mainContext.fillText(component.value.toString(), component.x, component.y);
+		mainContext.fillText(thisScore.value.toString(), thisScore.x, thisScore.y);
 	}
 
-	return component;
+	return thisScore;
 }
 
 function Field() {
-	var component = this;
+	var theField = this;
 
-	component.update = function() {
+	theField.update = function() {
 		return 0;
 	}
 
-	component.draw = function () {
+	theField.draw = function () {
 		mainContext.beginPath();
 		mainContext.rect(0,0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		mainContext.fillStyle = "#8599d5";
@@ -77,98 +77,98 @@ function Field() {
 		mainContext.closePath();
 	}
 
-	return component;
+	return theField;
 }
 
 function Ball(radius, initialX, initialY, initialDx, initialDy) {
-	var component = this;
-	component.radius = radius;
-	component.initialX = initialX;
-	component.initialY = initialY;
-	component.x = initialX;
-	component.y = initialY;
-	component.dx = initialDx;
-	component.dy = initialDy;
-	component.currentSpeed = 1;
-	component.maxSpeed = 10;
+	var theBall = this;
+	theBall.radius = radius;
+	theBall.initialX = initialX;
+	theBall.initialY = initialY;
+	theBall.x = initialX;
+	theBall.y = initialY;
+	theBall.dx = initialDx;
+	theBall.dy = initialDy;
+	theBall.currentSpeed = 1;
+	theBall.maxSpeed = 10;
 
-	component.draw = function() {
+	theBall.draw = function() {
 		mainContext.beginPath();
 	  // mainContext.fillStyle = "#8599d5";
 	  mainContext.fillStyle = "#FFFFFF";
-		mainContext.arc(component.x, component.y, component.radius, 0, Math.PI*2);
+		mainContext.arc(theBall.x, theBall.y, theBall.radius, 0, Math.PI*2);
 		mainContext.strokeStyle="#000000";
 	  mainContext.fill();
 	  mainContext.stroke();
 		mainContext.closePath();
 	}
 
-	component.respawn = function() {
-		component.x = component.initialX
-		component.y = component.initialY
-		component.dx = (component.dx > 0) ? -2 : 2;
-		component.dy = (component.dy > 0) ? -2 : 2;
-		component.currentSpeed = 1;
+	theBall.respawn = function() {
+		theBall.x = theBall.initialX
+		theBall.y = theBall.initialY
+		theBall.dx = (theBall.dx > 0) ? -2 : 2;
+		theBall.dy = (theBall.dy > 0) ? -2 : 2;
+		theBall.currentSpeed = 1;
 	}
 
-	component.bounceFaster = function() {
-		if (component.currentSpeed < component.maxSpeed) {
-			component.dx = (1.1 * component.dx)
-			component.dy = (1.1 * component.dy)
-			component.currentSpeed++;
+	theBall.bounceFaster = function() {
+		if (theBall.currentSpeed < theBall.maxSpeed) {
+			theBall.dx = (1.1 * theBall.dx)
+			theBall.dy = (1.1 * theBall.dy)
+			theBall.currentSpeed++;
 		}
-		component.dx = -component.dx;
+		theBall.dx = -theBall.dx;
 	}
 
-	component.update = function() {
-		component.x += component.dx;
-		component.y += component.dy;
+	theBall.update = function() {
+		theBall.x += theBall.dx;
+		theBall.y += theBall.dy;
 
-		if (component.y >= (SCREEN_HEIGHT - component.radius)) {
-			component.y = (SCREEN_HEIGHT - component.radius);
-			component.dy = -component.dy;
+		if (theBall.y >= (SCREEN_HEIGHT - theBall.radius)) {
+			theBall.y = (SCREEN_HEIGHT - theBall.radius);
+			theBall.dy = -theBall.dy;
 		}
-		if (component.y < Y_MARGIN + component.radius) {
-			component.y = Y_MARGIN + component.radius;
-			component.dy = -component.dy;
+		if (theBall.y < Y_MARGIN + theBall.radius) {
+			theBall.y = Y_MARGIN + theBall.radius;
+			theBall.dy = -theBall.dy;
 		}
 
-		if (component.x >= (players[1].paddle.x - component.radius)) {
-			if ((component.y >= players[1].paddle.y) && (component.y <= (players[1].paddle.y+players[1].paddle.height))) {
-				component.bounceFaster();
+		if (theBall.x >= (players[1].paddle.x - theBall.radius)) {
+			if ((theBall.y >= players[1].paddle.y) && (theBall.y <= (players[1].paddle.y+players[1].paddle.height))) {
+				theBall.bounceFaster();
 			} else {
 				players[0].score.increase();
-				component.respawn();
+				theBall.respawn();
 			}
 		}
 
-		if (component.x <= (players[0].paddle.x + component.radius + players[0].paddle.width)) {
-			if ((component.y >= players[0].paddle.y) && (component.y <= (players[0].paddle.y+players[0].paddle.height))) {
-				component.bounceFaster();
+		if (theBall.x <= (players[0].paddle.x + theBall.radius + players[0].paddle.width)) {
+			if ((theBall.y >= players[0].paddle.y) && (theBall.y <= (players[0].paddle.y+players[0].paddle.height))) {
+				theBall.bounceFaster();
 			} else {
 				players[1].score.increase();
-				component.respawn();
+				theBall.respawn();
 			}
 		}
 	}
 
-	return component;
+	return theBall;
 }
 
 function Paddle(width, height, initialX, initialY, initialDx, initialDy) {
-	var component = this;
-	component.width = width;
-	component.height = height;
-	component.x = initialX;
-	component.y = initialY;
-	component.dx = initialDx;
-	component.dy = initialDy;
-	component.isMovingUp = false;
-	component.isMovingDown = false;
+	var thisPaddle = this;
+	thisPaddle.width = width;
+	thisPaddle.height = height;
+	thisPaddle.x = initialX;
+	thisPaddle.y = initialY;
+	thisPaddle.dx = initialDx;
+	thisPaddle.dy = initialDy;
+	thisPaddle.isMovingUp = false;
+	thisPaddle.isMovingDown = false;
 
-	component.draw = function() {
+	thisPaddle.draw = function() {
 		mainContext.beginPath();
-		mainContext.rect(component.x, component.y, component.width, component.height);
+		mainContext.rect(thisPaddle.x, thisPaddle.y, thisPaddle.width, thisPaddle.height);
 		// mainContext.fillStyle = "#8599d5";
 		mainContext.fillStyle = "#FFFFFF";
 		mainContext.strokeStyle="#000000";
@@ -177,36 +177,36 @@ function Paddle(width, height, initialX, initialY, initialDx, initialDy) {
 		mainContext.closePath();
 	}
 
-	component.moveUp = function() {
-			component.dy = -PADDLE_Y_SPEED;
+	thisPaddle.moveUp = function() {
+			thisPaddle.dy = -PADDLE_Y_SPEED;
 	}
 
-	component.moveDown = function() {
-			component.dy = PADDLE_Y_SPEED;
+	thisPaddle.moveDown = function() {
+			thisPaddle.dy = PADDLE_Y_SPEED;
 	}
 
-	component.stopMoving = function() {
-			component.dy = 0;
+	thisPaddle.stopMoving = function() {
+			thisPaddle.dy = 0;
 	}
 
-	component.update = function() {
-		component.x += component.dx;
-		component.y += component.dy;
+	thisPaddle.update = function() {
+		thisPaddle.x += thisPaddle.dx;
+		thisPaddle.y += thisPaddle.dy;
 
-		if (component.y >= (SCREEN_HEIGHT - component.height)) {
-			component.y = (SCREEN_HEIGHT - component.height);
+		if (thisPaddle.y >= (SCREEN_HEIGHT - thisPaddle.height)) {
+			thisPaddle.y = (SCREEN_HEIGHT - thisPaddle.height);
 		}
-		if (component.y < Y_MARGIN) {
-			component.y = Y_MARGIN;
+		if (thisPaddle.y < Y_MARGIN) {
+			thisPaddle.y = Y_MARGIN;
 		}
 	}
-	return component;
+	return thisPaddle;
 }
 
 function Player(paddleWidth, paddleHeight, paddleX, paddleY, scoreX, scoreY) {
-	var component = this;
-	component.paddle = new Paddle(paddleWidth, paddleHeight, paddleX, paddleY, 0, 0);
-	component.score = new Score(0, scoreX, scoreY, 0, 0);
+	var thisPlayer = this;
+	thisPlayer.paddle = new Paddle(paddleWidth, paddleHeight, paddleX, paddleY, 0, 0);
+	thisPlayer.score = new Score(0, scoreX, scoreY, 0, 0);
 }
 
 function keyDownHandler(event) {
